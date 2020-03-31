@@ -2,6 +2,9 @@ package com.gft.tdd.service;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -32,11 +35,10 @@ public class PedidoServiceText {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		pedidoService = new PedidoService(pedidos, notificarEmail, notificarSms);
-		pedido = new PedidoBuilder()
-				.comValor(100.0)
-				.para("João", "joao@joao.com", "9999-0000")
-				.construir();
+
+		List<AcaoLancamentoPedido> acoes = Arrays.asList(pedidos,notificarEmail, notificarSms);
+		pedidoService = new PedidoService(acoes);
+		pedido = new PedidoBuilder().comValor(100.0).para("João", "joao@joao.com", "9999-0000").construir();
 	}
 
 	@Test
@@ -44,24 +46,24 @@ public class PedidoServiceText {
 		double imposto = pedidoService.lancar(pedido);
 		assertEquals(10.0, imposto, 0.0001);
 	}
-
+ 
 	@Test
 	public void deveSalvarPedidoNoBancoDeDados() throws Exception {
 		pedidoService.lancar(pedido);
-		Mockito.verify(pedidos).guardar(pedido);
+		Mockito.verify(pedidos).executar(pedido);
 
 	}
-	@Test 
-	public void deveNotificarPorEmail()throws Exception {
+
+	@Test
+	public void deveNotificarPorEmail() throws Exception {
 		pedidoService.lancar(pedido);
-		Mockito.verify(notificarEmail).enviar(pedido);
+		Mockito.verify(notificarEmail).executar(pedido);
 	}
-	
+
 	@Test
 	public void deveNotificarPorSms() throws Exception {
 		pedidoService.lancar(pedido);
-		Mockito.verify(notificarSms).notificar(pedido);
+		Mockito.verify(notificarSms).executar(pedido);
 	}
-	
 
 }

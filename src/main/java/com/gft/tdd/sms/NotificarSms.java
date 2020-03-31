@@ -1,10 +1,13 @@
 package com.gft.tdd.sms;
 
 import com.gft.tdd.model.Pedido;
+import com.gft.tdd.service.AcaoLancamentoPedido;
 
-public class NotificarSms {
+public class NotificarSms implements AcaoLancamentoPedido {
 
-	public void notificar(Pedido pedido) {
+	@Override
+	public void executar(Pedido pedido) {
 		System.out.println("Enviando o sms.....");
+
 	}
 }
